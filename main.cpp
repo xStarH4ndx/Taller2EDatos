@@ -1,18 +1,63 @@
 #include <iostream>
-
+#include <climits>
+#include "Nodo.h"
 using namespace std;
 
+//VARIABLES CONSTANTES (NO CAMBIAN DURANTE EL PROGRAMA)
 const int filas=6;
 const int columnas=7;
 
-void mostrarTablero(int tablero[filas][columnas]) {
-    for (int i = 0; i < filas; ++i) {
-        for (int j = 0; j < columnas; ++j) {
-            cout << tablero[i][j] << " ";
-        }
-        cout << "\n";
+/*
+//NODO ARBOL
+struct Nodo {
+    string tablero[filas][columnas];
+    int valor;  //Puntuación asociada a este estado del tablero
+    Nodo* hijos[columnas];  //Hijos del nodo (representan los posibles movimientos)
+};
+*/
+
+int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta) {
+    if (profundidad == 0 /* u otro criterio de parada */) {
+        // Calcula y asigna la puntuación del nodo
+        return nodo->valor;
     }
-    cout << "\n";
+
+    if (esMaximizador) {
+        int maxEval = INT_MIN;
+        for (int i = 0; i < columnas; ++i) {
+            Nodo* hijo = nodo->hijos[i];
+            int eval = minimax(hijo, profundidad - 1, false, alpha, beta);
+            maxEval = max(maxEval, eval);
+            alpha = max(alpha, eval);
+            if (beta <= alpha) {
+                break;  // Poda alfa-beta
+            }
+        }
+        return maxEval;
+    } else {
+        int minEval = INT_MAX;
+        for (int i = 0; i < columnas; ++i) {
+            Nodo* hijo = nodo->hijos[i];
+            int eval = minimax(hijo, profundidad - 1, true, alpha, beta);
+            minEval = min(minEval, eval);
+            beta = min(beta, eval);
+            if (beta <= alpha) {
+                break;  // Poda alfa-beta
+            }
+        }
+        return minEval;
+    }
+}
+
+
+void mostrarTablero(string tablero[filas][columnas]) {
+    for (int i = 0; i < filas; ++i) {
+        cout<<"|";
+        for (int j = 0; j < columnas; ++j) {
+            cout << tablero[i][j] << "|";
+        }
+        cout<<endl;
+    }
 }
 
 void menu() {
@@ -44,27 +89,20 @@ void menu() {
 
 
 int main(){
-    const int filas=6;
-    const int columnas=7;
-    //menu();
+    // Crear un nodo raíz
+    Nodo* raiz = new Nodo();
 
-    // Inicializar el tablero
-    string tablero[filas*columnas];
+    // Acceder al tablero de la raíz
+    raiz->tablero[0][0] = "X";
 
-    for (int i = 0; i < filas; ++i) {
-        for (int j = 0; j < columnas; ++j) {
-            tablero[i * columnas + j] = " ";
-        }
-    }
+    // Generar hijos del nodo raíz
+    raiz->generarHijos(1);  // Supongamos que el jugador actual es el jugador 1
 
-    // Acceder y mostrar los elementos de la matriz
-    std::cout << "Matriz:" << std::endl;
-    for (int i = 0; i < filas; ++i) {
-        cout<<"|";
-        for (int j = 0; j < columnas; ++j) {
-            cout << tablero[i * columnas + j]<<"|";
-        }
-        cout <<endl;
-    }
+    // Mostrar el tablero del nodo raíz
+    raiz->mostrarTablero();
+
+    // Liberar la memoria
+    delete raiz;
+
     return 0;
 };
