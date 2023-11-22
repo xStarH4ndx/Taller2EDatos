@@ -1,29 +1,19 @@
 #include <iostream>
-#include <vector>
+
 using namespace std;
 
-void menu();
-void imprimirTablero(const vector<vector<char>>& tablero);
-int main(){
-    int filas=6;
-    int columnas=7;
-    //menu();
+const int filas=6;
+const int columnas=7;
 
-    // Inicializar el tablero
-    vector<vector<char>> tablero(filas, vector<char>(columnas, 'X'));
-    imprimirTablero(tablero);
-    return 0;
-};
-
-void imprimirTablero(const vector<vector<char>>& tablero) {
-    for (const auto& fila : tablero) {
-        for (char c : fila) {
-            cout << c << '|';
+void mostrarTablero(int tablero[filas][columnas]) {
+    for (int i = 0; i < filas; ++i) {
+        for (int j = 0; j < columnas; ++j) {
+            cout << tablero[i][j] << " ";
         }
-        cout << endl;
+        cout << "\n";
     }
+    cout << "\n";
 }
-
 
 void menu() {
     int opcion;
@@ -51,3 +41,30 @@ void menu() {
         }
     } while (opcion < 1 || opcion > 3); //El bucle continuará mientras la opción sea inválida
 }
+
+
+int main(){
+    const int filas=6;
+    const int columnas=7;
+    //menu();
+
+    // Inicializar el tablero
+    string tablero[filas*columnas];
+
+    for (int i = 0; i < filas; ++i) {
+        for (int j = 0; j < columnas; ++j) {
+            tablero[i * columnas + j] = " ";
+        }
+    }
+
+    // Acceder y mostrar los elementos de la matriz
+    std::cout << "Matriz:" << std::endl;
+    for (int i = 0; i < filas; ++i) {
+        cout<<"|";
+        for (int j = 0; j < columnas; ++j) {
+            cout << tablero[i * columnas + j]<<"|";
+        }
+        cout <<endl;
+    }
+    return 0;
+};
