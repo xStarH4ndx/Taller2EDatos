@@ -67,17 +67,6 @@ int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta
 }
 
 
-
-void mostrarTablero(string tablero[filas][columnas]) {
-    for (int i = 0; i < filas; ++i) {
-        cout<<"|";
-        for (int j = 0; j < columnas; ++j) {
-            cout << tablero[i][j] << "|";
-        }
-        cout<<endl;
-    }
-}
-
 void menu() {
     int opcion;
     do {
@@ -111,7 +100,7 @@ int main(){
     // Acceder al tablero de la raíz
     raiz->tablero[0][0] = "X";
     // Generar hijos del nodo raíz
-    raiz->generarHijos(1);  // Supongamos que el jugador actual es el jugador 1
+    raiz->generarHijos(1);  //Supongamos que el jugador actual es el jugador 1
 
     // Mostrar el tablero del nodo raíz
     raiz->mostrarTablero();
