@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 using namespace std;
 
@@ -45,7 +44,7 @@ void Nodo::mostrarTablero() {
     }
 }
 
-void Nodo::generarHijos(int jugador) {
+void Nodo:: generarHijos(int jugador) {
     // Implementa la lógica para generar los hijos del nodo (posibles movimientos)
     // Puedes modificar el tablero y asignar valores a la propiedad 'valor' según la evaluación
 }

@@ -1,21 +1,38 @@
 #include <iostream>
 #include <climits>
-#include "Nodo.h"
+#include "Nodo.h"//acá estan las filas y columnas constantes
 using namespace std;
 
-//VARIABLES CONSTANTES (NO CAMBIAN DURANTE EL PROGRAMA)
-const int filas=6;
-const int columnas=7;
 
 /*
-//NODO ARBOL
-struct Nodo {
-    string tablero[filas][columnas];
-    int valor;  //Puntuación asociada a este estado del tablero
-    Nodo* hijos[columnas];  //Hijos del nodo (representan los posibles movimientos)
-};
+//MINIMAX SIN LA UTILIZACIÓN DE PODA ALFA-BETA
+int miniMaxSIN(Nodo* nodo, int profundidad, bool esMaximizador) {
+    if (profundidad == 0 //u otro criterio de parada) {
+        // Calcula y asigna la puntuación del nodo
+        return nodo->valor;
+    }
+
+    if (esMaximizador) {
+        int maxEval = INT_MIN;
+        for (int i = 0; i < columnas; ++i) {
+            Nodo* hijo = nodo->hijos[i];
+            int eval = miniMaxSIN(hijo, profundidad - 1, false);
+            maxEval = max(maxEval, eval);
+        }
+        return maxEval;
+    } else {
+        int minEval = INT_MAX;
+        for (int i = 0; i < columnas; ++i) {
+            Nodo* hijo = nodo->hijos[i];
+            int eval = miniMaxSIN(hijo, profundidad - 1, true);
+            minEval = min(minEval, eval);
+        }
+        return minEval;
+    }
+}
 */
 
+//MINIMAX CON LA UTILIZACIÓN DE PODA ALFA-BETA
 int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta) {
     if (profundidad == 0 /* u otro criterio de parada */) {
         // Calcula y asigna la puntuación del nodo
@@ -48,6 +65,7 @@ int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta
         return minEval;
     }
 }
+
 
 
 void mostrarTablero(string tablero[filas][columnas]) {
@@ -87,14 +105,11 @@ void menu() {
     } while (opcion < 1 || opcion > 3); //El bucle continuará mientras la opción sea inválida
 }
 
-
 int main(){
-    // Crear un nodo raíz
-    Nodo* raiz = new Nodo();
+    Nodo* raiz = new Nodo();//caso inicial (todo vacío)
 
     // Acceder al tablero de la raíz
     raiz->tablero[0][0] = "X";
-
     // Generar hijos del nodo raíz
     raiz->generarHijos(1);  // Supongamos que el jugador actual es el jugador 1
 
