@@ -66,6 +66,9 @@ int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta
     }
 }
 
+void realizarMovimiento(){
+    
+}
 
 void menu() {
     int opcion;
@@ -98,7 +101,7 @@ int main(){
     Nodo* raiz = new Nodo();//caso inicial (todo vacío)
 
     // Acceder al tablero de la raíz
-    raiz->tablero[0][0] = "X";
+    raiz->tablero[6][0] = "X";
     // Generar hijos del nodo raíz
     raiz->generarHijos(1);  //Supongamos que el jugador actual es el jugador 1
 
