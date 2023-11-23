@@ -66,8 +66,52 @@ int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta
     }
 }
 
-void realizarMovimiento(){
-    
+void realizarMovimiento(Nodo*nodo,int jugador){
+    int col;
+    cout<<"Elegir columna para insertar ficha (1-7):";
+    cin>>col;
+    col--;
+    for(int i=5;i>=0;i--){
+        if(nodo->tablero[i][col]==" " && jugador==1){
+            nodo->tablero[i][col]="X";
+            nodo->mostrarTablero();
+            return;
+        }else if(nodo->tablero[i][col]==" " && jugador==2){
+            nodo->tablero[i][col]="O";
+            nodo->mostrarTablero();
+            return;
+        }
+        
+        if(i==0 && nodo->tablero[i][col]!=" "){
+            cout<<"Error -> Columna llena"<<endl;
+            nodo->mostrarTablero();
+            realizarMovimiento(nodo,jugador);
+            return;
+        }
+    }
+
+}
+
+int OpcionesMenu(){
+    int opcion;
+    do{
+        cout<<"---OPCIONES---"<<endl;
+        cout<<"1) Realizar Movimiento"<<
+        "\n"<<"2) Guardar Partida"<<endl;
+        cout<<"Opcion: ";
+        cin>>opcion;
+        switch(opcion){
+            case 1:
+                opcion= 1;
+                break;
+            case 2:
+                opcion= 2;
+                break;
+            default:
+                cout<<"Ingrese opcion valida"<<endl;
+        }
+    }while(opcion<1 || opcion>2);
+    return opcion;
 }
 
 void menu() {
@@ -100,13 +144,20 @@ void menu() {
 int main(){
     Nodo* raiz = new Nodo();//caso inicial (todo vacío)
 
-    // Acceder al tablero de la raíz
-    raiz->tablero[6][0] = "X";
+    bool mov = true;
+    while (mov) {
+        // Realiza movimientos
+        realizarMovimiento(raiz, 1);
+        realizarMovimiento(raiz, 2);
+        // Verifica la opción del menú
+        if (OpcionesMenu() == 2) {
+            mov=false;
+        }
+    }
     // Generar hijos del nodo raíz
     raiz->generarHijos(1);  //Supongamos que el jugador actual es el jugador 1
 
     // Mostrar el tablero del nodo raíz
-    raiz->mostrarTablero();
 
     // Liberar la memoria
     delete raiz;
