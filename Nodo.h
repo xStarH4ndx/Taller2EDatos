@@ -1,60 +1,131 @@
 #include <iostream>
 using namespace std;
 
-const int filas=6;
-const int columnas=7;
+const int filas = 6;
+const int columnas = 7;
+const int profundidadMaxima = 4;
 
 class Nodo {
-    public:
-        string tablero[filas][columnas];
-        int valor;  // Puntuación asociada a este estado del tablero
-        Nodo* hijos[columnas];  // Hijos del nodo representan los posibles movimientos
-        Nodo();
-        ~Nodo();
-        bool verificarVictoria(int jugador);
-        void generarHijos(int jugador);
-        void mostrarTablero();
+public:
+    string tablero[filas][columnas];
+    Nodo* hijos[columnas];  // Hijos del nodo representan los posibles movimientos
+    int valor;
+    Nodo();
+    ~Nodo();
+    bool verificarVictoria(int jugador);
+    void generarHijos(int jugador);
+    void realizarMovimiento(int columna, int jugador);
+    void mostrarTablero();
+    bool esColumnaValida(int columna);
+    bool esNodoTerminal();
+    int minimax(int profundidad, bool esMaximizador, int alpha, int beta);
 };
 
-Nodo::Nodo(){
-    valor=0;
-    for(int i=0;i<filas;i++){
-        for(int j=0;j<columnas;j++){
-            tablero[i][j]=" ";
+Nodo::Nodo() {
+    for (int i = 0; i < filas; i++) {
+        for (int j = 0; j < columnas; j++) {
+            tablero[i][j] = " ";
         }
     }
-    for(int i=0;i<columnas;i++){
-        hijos[i]=nullptr;
+    for (int i = 0; i < columnas; i++) {
+        hijos[i] = nullptr;
     }
 }
 
-Nodo::~Nodo(){
-    for(int i=0;i<columnas;i++){
+Nodo::~Nodo() {
+    for (int i = 0; i < columnas; i++) {
         delete hijos[i];
     }
 }
 
-// Método para imprimir el tablero del nodo
 void Nodo::mostrarTablero() {
     for (int i = 0; i < filas; ++i) {
         cout << "|";
         for (int j = 0; j < columnas; ++j) {
-            cout<<tablero[i][j]<< "|";
+            cout << tablero[i][j] << "|";
         }
-        cout<<endl;
+        cout << endl;
     }
 }
 
-void Nodo:: generarHijos(int jugador) {
-    // Implementa la lógica para generar los hijos del nodo (posibles movimientos)
-    // Puedes modificar el tablero y asignar valores a la propiedad 'valor' según la evaluación
+void Nodo::generarHijos(int jugador) {
+    for (int i = 0; i < columnas; ++i) {
+        if (tablero[0][i] == " ") {
+            hijos[i] = new Nodo();
+            for (int j = 0; j < filas; ++j) {
+                for (int k = 0; k < columnas; ++k) {
+                    hijos[i]->tablero[j][k] = tablero[j][k];
+                }
+            }
+            hijos[i]->realizarMovimiento(i, jugador);
+        }
+    }
 }
 
+void Nodo::realizarMovimiento(int columna, int jugador) {
+    for (int i = filas - 1; i >= 0; --i) {
+        if (tablero[i][columna] == " ") {
+            tablero[i][columna] = (jugador == 1) ? "X" : "O";
+            return;
+        }
+    }
+}
+
+bool Nodo::esColumnaValida(int columna) {
+    return tablero[0][columna] == " ";
+}
+
+bool Nodo::esNodoTerminal() {
+    // Un nodo terminal es aquel en el que se ha alcanzado la profundidad máxima
+    return valor != 0 || verificarVictoria(1) || verificarVictoria(2);
+}
+
+int Nodo::minimax(int profundidad, bool esMaximizador, int alpha, int beta) {
+    if (profundidad == 0 || esNodoTerminal()) {
+        return valor;
+    }
+
+    if (esMaximizador) {
+        int maxEval = INT_MIN;
+        for (int i = 0; i < columnas; ++i) {
+            if (esColumnaValida(i)) {
+                Nodo* hijo = new Nodo(*this);
+                hijo->realizarMovimiento(i, 2); // 2 representa al jugador máquina
+                int eval = hijo->minimax(profundidad - 1, false, alpha, beta);
+                maxEval = max(maxEval, eval);
+                alpha = max(alpha, eval);
+                if (beta <= alpha) {
+                    delete hijo;
+                    break;
+                }
+                delete hijo;
+            }
+        }
+        return maxEval;
+    } else {
+        int minEval = INT_MAX;
+        for (int i = 0; i < columnas; ++i) {
+            if (esColumnaValida(i)) {
+                Nodo* hijo = new Nodo(*this);
+                hijo->realizarMovimiento(i, 1); // 1 representa al jugador humano
+                int eval = hijo->minimax(profundidad - 1, true, alpha, beta);
+                minEval = min(minEval, eval);
+                beta = min(beta, eval);
+                if (beta <= alpha) {
+                    delete hijo;
+                    break;
+                }
+                delete hijo;
+            }
+        }
+        return minEval;
+    }
+}
 
 bool Nodo::verificarVictoria(int jugador) {
-    //ESTO ESCOJE LA FICHA CORRESPONDIENTE AL JUGADOR (1=X;2=O)
-    string ficha= (jugador==1)?"X":"O";
-    //DETECTAR VICTORIA EN FILAS
+    string ficha = (jugador == 1) ? "X" : "O";
+
+    // DETECTAR VICTORIA EN FILAS
     for (int i = 0; i < filas; ++i) {
         for (int j = 0; j < columnas - 3; ++j) {
             if (tablero[i][j] == ficha &&
@@ -66,7 +137,7 @@ bool Nodo::verificarVictoria(int jugador) {
         }
     }
 
-    //DETECTAR VICTORIAS EN COLUMNAS
+    // DETECTAR VICTORIAS EN COLUMNAS
     for (int i = 0; i < filas - 3; ++i) {
         for (int j = 0; j < columnas; ++j) {
             if (tablero[i][j] == ficha &&
@@ -78,7 +149,7 @@ bool Nodo::verificarVictoria(int jugador) {
         }
     }
 
-    //DETECTAR VICTORIAS EN DIAGNOAL DERECHA
+    // DETECTAR VICTORIAS EN DIAGNOAL DERECHA
     for (int i = 0; i < filas - 3; ++i) {
         for (int j = 0; j < columnas - 3; ++j) {
             if (tablero[i][j] == ficha &&
@@ -90,7 +161,7 @@ bool Nodo::verificarVictoria(int jugador) {
         }
     }
 
-    //DETECTAR VICTORIAS EN DIAGONAL IZQUIERDA
+    // DETECTAR VICTORIAS EN DIAGONAL IZQUIERDA
     for (int i = 0; i < filas - 3; ++i) {
         for (int j = 3; j < columnas; ++j) {
             if (tablero[i][j] == ficha &&
