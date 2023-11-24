@@ -152,19 +152,21 @@ int main(){
         if (raiz->verificarVictoria(1)) {
             cout << "¡Jugador 1 ha ganado!" << endl;
             jugadorGanador = 1;
-            mov = false;
+            break;
         } else {
             realizarMovimiento(raiz, 2);
             if (raiz->verificarVictoria(2)) {
                 cout << "¡Jugador 2 ha ganado!" << endl;
                 jugadorGanador = 2;
-                mov = false;
+                break;
+            }else{
+                if (OpcionesMenu() == 2) {
+                    mov = false;
+                }
             }
         }
         // Verifica la opción del menú
-        if (OpcionesMenu() == 2) {
-            mov = false;
-        }
+        
     }
     // Generar hijos del nodo raíz
     raiz->generarHijos(1);//Supongamos que el jugador actual es el jugador 1
