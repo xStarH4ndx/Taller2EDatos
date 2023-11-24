@@ -79,7 +79,8 @@ void realizarMovimientoFacil(Nodo* nodo) {
     for (int i = 5; i >= 0; --i) {
         if (nodo->tablero[i][columnaAleatoria] == " ") {
             nodo->tablero[i][columnaAleatoria] = "O";
-            cout<<"<-------------->"<<endl;
+            cout<<"Maquina:"<<"\n"<<
+            "<-------------->"<<endl;
             nodo->mostrarTablero();
             return;
         }
@@ -139,13 +140,16 @@ void realizarMovimiento(Nodo*nodo,int jugador){
     col--;
     for(int i=5;i>=0;i--){
         if(i==0 && nodo->tablero[i][col]!=" "){
-            cout<<"Error -> Columna llena"<<endl;
+            cout<<"Error -> Columna llena"<<"\n"<<"<-------------->"<<endl;
             nodo->mostrarTablero();
+            cout<<"<-------------->"<<endl;
             realizarMovimiento(nodo,jugador);
             return;
         }else if(nodo->tablero[i][col]==" " && jugador==1){
             nodo->tablero[i][col]="X";
+            cout<<"Jugador:"<<"\n"<<"<-------------->"<<endl;
             nodo->mostrarTablero();
+            cout<<"<-------------->"<<endl;
             return;
         }
     }
