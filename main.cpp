@@ -66,30 +66,89 @@ int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta
     }
 }
 
+// Función para realizar el movimiento de la máquina en el nivel fácil
+void realizarMovimientoFacil(Nodo* nodo) {
+    // Lógica para el nivel fácil
+    // Por ejemplo, selección aleatoria de una columna disponible
+    int columnaAleatoria;
+    do {
+        columnaAleatoria = rand() % columnas;
+    } while (nodo->tablero[0][columnaAleatoria] != " ");
+    
+    // Realizar el movimiento en la columna seleccionada
+    for (int i = 5; i >= 0; --i) {
+        if (nodo->tablero[i][columnaAleatoria] == " ") {
+            nodo->tablero[i][columnaAleatoria] = "O";
+            cout<<"<-------------->"<<endl;
+            nodo->mostrarTablero();
+            return;
+        }
+    }
+}
+
+// Función para realizar el movimiento de la máquina en el nivel medio
+void realizarMovimientoMedio(Nodo* nodo) {
+    // Lógica para el nivel medio
+    // Aquí puedes implementar una estrategia más avanzada
+    // Por ejemplo, evaluando las posibles jugadas y tomando una decisión
+    // basada en el algoritmo Minimax
+    // ...
+
+    // En este ejemplo, se utiliza la estrategia fácil
+    realizarMovimientoFacil(nodo);
+}
+
+// Función para realizar el movimiento de la máquina en el nivel difícil
+void realizarMovimientoDificil(Nodo* nodo) {
+    // Lógica para el nivel difícil
+    // Aquí puedes implementar una estrategia más avanzada
+    // que utilice el algoritmo Minimax para tomar la mejor decisión
+    // ...
+
+    // En este ejemplo, se utiliza la estrategia fácil
+    realizarMovimientoFacil(nodo);
+}
+
+
+void movimientoMaquina(Nodo* nodo, int nivelDificultad) {
+    // Lógica para la máquina según el nivel de dificultad
+    switch (nivelDificultad) {
+        case 1:  // Fácil
+            realizarMovimientoFacil(nodo);
+            break;
+        case 2:  // Medio
+            realizarMovimientoMedio(nodo);
+            break;
+        case 3:  // Difícil
+            realizarMovimientoDificil(nodo);
+            break;
+        default:
+            cerr << "Nivel de dificultad no válido." << endl;
+    }
+}
+
+
 void realizarMovimiento(Nodo*nodo,int jugador){
     int col;
     cout<<"Elegir columna para insertar ficha (1-7):";
     cin>>col;
+    while(col<1||col>7){
+        cout<<"Ingrese columna valida (1-7): ";
+        cin>>col;
+    }
     col--;
     for(int i=5;i>=0;i--){
-        if(nodo->tablero[i][col]==" " && jugador==1){
-            nodo->tablero[i][col]="X";
-            nodo->mostrarTablero();
-            return;
-        }else if(nodo->tablero[i][col]==" " && jugador==2){
-            nodo->tablero[i][col]="O";
-            nodo->mostrarTablero();
-            return;
-        }
-        
         if(i==0 && nodo->tablero[i][col]!=" "){
             cout<<"Error -> Columna llena"<<endl;
             nodo->mostrarTablero();
             realizarMovimiento(nodo,jugador);
             return;
+        }else if(nodo->tablero[i][col]==" " && jugador==1){
+            nodo->tablero[i][col]="X";
+            nodo->mostrarTablero();
+            return;
         }
     }
-
 }
 
 int OpcionesMenu(){
@@ -114,7 +173,7 @@ int OpcionesMenu(){
     return opcion;
 }
 
-void menu() {
+int menu() {
     int opcion;
     do {
         cout << "------CONECTA 4-----" << endl;
@@ -139,9 +198,11 @@ void menu() {
                 cout << "Ingrese una opcion valida" << endl;
         }
     } while (opcion < 1 || opcion > 3); //El bucle continuará mientras la opción sea inválida
+    return opcion;
 }
 
 int main(){
+    int dificultad= menu();
     Nodo* raiz = new Nodo();//caso inicial (todo vacío)
     raiz->mostrarTablero();
     bool mov = true;
@@ -154,9 +215,9 @@ int main(){
             jugadorGanador = 1;
             break;
         } else {
-            realizarMovimiento(raiz, 2);
+            movimientoMaquina(raiz, dificultad);
             if (raiz->verificarVictoria(2)) {
-                cout << "¡Jugador 2 ha ganado!" << endl;
+                cout << "¡La máquina ha ganado!" << endl;
                 jugadorGanador = 2;
                 break;
             }else{
