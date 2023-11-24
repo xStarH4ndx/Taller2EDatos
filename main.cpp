@@ -165,8 +165,6 @@ int main(){
                 }
             }
         }
-        // Verifica la opción del menú
-        
     }
     // Generar hijos del nodo raíz
     raiz->generarHijos(1);//Supongamos que el jugador actual es el jugador 1
