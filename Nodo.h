@@ -11,6 +11,7 @@ class Nodo {
         Nodo* hijos[columnas];  // Hijos del nodo representan los posibles movimientos
         Nodo();
         ~Nodo();
+        bool verificarVictoria(int jugador);
         void generarHijos(int jugador);
         void mostrarTablero();
 };
@@ -47,4 +48,57 @@ void Nodo::mostrarTablero() {
 void Nodo:: generarHijos(int jugador) {
     // Implementa la lógica para generar los hijos del nodo (posibles movimientos)
     // Puedes modificar el tablero y asignar valores a la propiedad 'valor' según la evaluación
+}
+
+
+bool Nodo::verificarVictoria(int jugador) {
+    //DETECTAR VICTORIA EN FILAS
+    for (int i = 0; i < filas; ++i) {
+        for (int j = 0; j < columnas - 3; ++j) {
+            if (tablero[i][j] == "X" &&
+                tablero[i][j + 1] == "X" &&
+                tablero[i][j + 2] == "X" &&
+                tablero[i][j + 3] == "X") {
+                return true;
+            }
+        }
+    }
+
+    //DETECTAR VICTORIAS EN COLUMNAS
+    for (int i = 0; i < filas - 3; ++i) {
+        for (int j = 0; j < columnas; ++j) {
+            if (tablero[i][j] == "X" &&
+                tablero[i + 1][j] == "X" &&
+                tablero[i + 2][j] == "X" &&
+                tablero[i + 3][j] == "X") {
+                return true;
+            }
+        }
+    }
+
+    //DETECTAR VICTORIAS EN DIAGNOAL DERECHA
+    for (int i = 0; i < filas - 3; ++i) {
+        for (int j = 0; j < columnas - 3; ++j) {
+            if (tablero[i][j] == "X" &&
+                tablero[i + 1][j + 1] == "X" &&
+                tablero[i + 2][j + 2] == "X" &&
+                tablero[i + 3][j + 3] == "X") {
+                return true;
+            }
+        }
+    }
+
+    //DETECTAR VICTORIAS EN DIAGONAL IZQUIERDA
+    for (int i = 0; i < filas - 3; ++i) {
+        for (int j = 3; j < columnas; ++j) {
+            if (tablero[i][j] == "X" &&
+                tablero[i + 1][j - 1] == "X" &&
+                tablero[i + 2][j - 2] == "X" &&
+                tablero[i + 3][j - 3] == "X") {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

@@ -149,6 +149,14 @@ int main(){
         // Realiza movimientos
         realizarMovimiento(raiz, 1);
         realizarMovimiento(raiz, 2);
+
+        if (raiz->verificarVictoria(1)) {
+            cout << "¡Jugador 1 ha ganado!" << endl;
+            mov = false;
+        } else if (raiz->verificarVictoria(2)) {
+            cout << "¡Jugador 2 ha ganado!" << endl;
+            mov = false;
+        }
         // Verifica la opción del menú
         if (OpcionesMenu() == 2) {
             mov=false;
