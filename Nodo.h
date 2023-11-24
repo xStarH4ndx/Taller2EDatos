@@ -52,13 +52,15 @@ void Nodo:: generarHijos(int jugador) {
 
 
 bool Nodo::verificarVictoria(int jugador) {
+    //ESTO ESCOJE LA FICHA CORRESPONDIENTE AL JUGADOR (1=X;2=O)
+    string ficha= (jugador==1)?"X":"O";
     //DETECTAR VICTORIA EN FILAS
     for (int i = 0; i < filas; ++i) {
         for (int j = 0; j < columnas - 3; ++j) {
-            if (tablero[i][j] == "X" &&
-                tablero[i][j + 1] == "X" &&
-                tablero[i][j + 2] == "X" &&
-                tablero[i][j + 3] == "X") {
+            if (tablero[i][j] == ficha &&
+                tablero[i][j + 1] == ficha &&
+                tablero[i][j + 2] == ficha &&
+                tablero[i][j + 3] == ficha) {
                 return true;
             }
         }
@@ -67,10 +69,10 @@ bool Nodo::verificarVictoria(int jugador) {
     //DETECTAR VICTORIAS EN COLUMNAS
     for (int i = 0; i < filas - 3; ++i) {
         for (int j = 0; j < columnas; ++j) {
-            if (tablero[i][j] == "X" &&
-                tablero[i + 1][j] == "X" &&
-                tablero[i + 2][j] == "X" &&
-                tablero[i + 3][j] == "X") {
+            if (tablero[i][j] == ficha &&
+                tablero[i + 1][j] == ficha &&
+                tablero[i + 2][j] == ficha &&
+                tablero[i + 3][j] == ficha) {
                 return true;
             }
         }
@@ -79,10 +81,10 @@ bool Nodo::verificarVictoria(int jugador) {
     //DETECTAR VICTORIAS EN DIAGNOAL DERECHA
     for (int i = 0; i < filas - 3; ++i) {
         for (int j = 0; j < columnas - 3; ++j) {
-            if (tablero[i][j] == "X" &&
-                tablero[i + 1][j + 1] == "X" &&
-                tablero[i + 2][j + 2] == "X" &&
-                tablero[i + 3][j + 3] == "X") {
+            if (tablero[i][j] == ficha &&
+                tablero[i + 1][j + 1] == ficha &&
+                tablero[i + 2][j + 2] == ficha &&
+                tablero[i + 3][j + 3] == ficha) {
                 return true;
             }
         }
@@ -91,10 +93,10 @@ bool Nodo::verificarVictoria(int jugador) {
     //DETECTAR VICTORIAS EN DIAGONAL IZQUIERDA
     for (int i = 0; i < filas - 3; ++i) {
         for (int j = 3; j < columnas; ++j) {
-            if (tablero[i][j] == "X" &&
-                tablero[i + 1][j - 1] == "X" &&
-                tablero[i + 2][j - 2] == "X" &&
-                tablero[i + 3][j - 3] == "X") {
+            if (tablero[i][j] == ficha &&
+                tablero[i + 1][j - 1] == ficha &&
+                tablero[i + 2][j - 2] == ficha &&
+                tablero[i + 3][j - 3] == ficha) {
                 return true;
             }
         }
