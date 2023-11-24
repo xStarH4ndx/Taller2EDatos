@@ -143,32 +143,33 @@ void menu() {
 
 int main(){
     Nodo* raiz = new Nodo();//caso inicial (todo vacío)
-
+    raiz->mostrarTablero();
     bool mov = true;
+    int jugadorGanador = 0;
     while (mov) {
         // Realiza movimientos
         realizarMovimiento(raiz, 1);
-        realizarMovimiento(raiz, 2);
-        // Verifica la opción del menú
-        if (OpcionesMenu() == 2) {
-            mov=false;
-        }
-
         if (raiz->verificarVictoria(1)) {
             cout << "¡Jugador 1 ha ganado!" << endl;
+            jugadorGanador = 1;
             mov = false;
-        } else if (raiz->verificarVictoria(2)) {
-            cout << "¡Jugador 2 ha ganado!" << endl;
+        } else {
+            realizarMovimiento(raiz, 2);
+            if (raiz->verificarVictoria(2)) {
+                cout << "¡Jugador 2 ha ganado!" << endl;
+                jugadorGanador = 2;
+                mov = false;
+            }
+        }
+        // Verifica la opción del menú
+        if (OpcionesMenu() == 2) {
             mov = false;
         }
     }
     // Generar hijos del nodo raíz
-    raiz->generarHijos(1);  //Supongamos que el jugador actual es el jugador 1
-
+    raiz->generarHijos(1);//Supongamos que el jugador actual es el jugador 1
     // Mostrar el tablero del nodo raíz
-
     // Liberar la memoria
     delete raiz;
-
     return 0;
 };
