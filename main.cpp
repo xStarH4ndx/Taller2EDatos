@@ -171,5 +171,6 @@ int main(){
     // Mostrar el tablero del nodo raíz
     // Liberar la memoria
     delete raiz;
+    cout << "¡Partida finalizada!" << endl;
     return 0;
 };
