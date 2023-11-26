@@ -7,8 +7,8 @@ const int profundidadMaxima = 4;
 
 class Nodo {
 public:
-    string tablero[filas][columnas];
-    Nodo* hijos[columnas];  // Hijos del nodo representan los posibles movimientos
+    string tablero[filas][columnas];//Tablero
+    Nodo* hijos[columnas];  //Hijos del nodo representan los posibles movimientos
     int valor;
     Nodo();
     ~Nodo();
@@ -22,39 +22,39 @@ public:
 };
 
 Nodo::Nodo() {
-    for (int i = 0; i < filas; i++) {
-        for (int j = 0; j < columnas; j++) {
-            tablero[i][j] = " ";
+    for(int i=0;i<filas;i++) {
+        for(int j=0;j<columnas;j++) {
+            tablero[i][j]= " ";
         }
     }
-    for (int i = 0; i < columnas; i++) {
-        hijos[i] = nullptr;
+    for(int i=0;i<columnas;i++) {
+        hijos[i]= nullptr;
     }
 }
 
 Nodo::~Nodo() {
-    for (int i = 0; i < columnas; i++) {
+    for(int i=0;i<columnas;i++) {
         delete hijos[i];
     }
 }
 
 void Nodo::mostrarTablero() {
-    for (int i = 0; i < filas; ++i) {
-        cout << "|";
-        for (int j = 0; j < columnas; ++j) {
-            cout << tablero[i][j] << "|";
+    for(int i=0;i<filas;i++) {
+        cout<<"|";
+        for(int j=0;j<columnas;j++) {
+            cout<<tablero[i][j]<<"|";
         }
-        cout << endl;
+        cout<<endl;
     }
 }
 
 void Nodo::generarHijos(int jugador) {
-    for (int i = 0; i < columnas; ++i) {
-        if (tablero[0][i] == " ") {
-            hijos[i] = new Nodo();
-            for (int j = 0; j < filas; ++j) {
-                for (int k = 0; k < columnas; ++k) {
-                    hijos[i]->tablero[j][k] = tablero[j][k];
+    for(int i=0;i<columnas;i++) {
+        if(tablero[0][i]==" ") {
+            hijos[i]= new Nodo();
+            for(int j=0;j<filas;j++) {
+                for(int k=0;k<columnas;k++) {
+                    hijos[i]->tablero[j][k]= tablero[j][k];
                 }
             }
             hijos[i]->realizarMovimiento(i, jugador);
@@ -63,38 +63,37 @@ void Nodo::generarHijos(int jugador) {
 }
 
 void Nodo::realizarMovimiento(int columna, int jugador) {
-    for (int i = filas - 1; i >= 0; --i) {
-        if (tablero[i][columna] == " ") {
-            tablero[i][columna] = (jugador == 1) ? "X" : "O";
+    for (int i= filas-1;i>=0;i--) {
+        if (tablero[i][columna]==" ") {
+            tablero[i][columna]=(jugador==1)?"X":"O";
             return;
         }
     }
 }
 
 bool Nodo::esColumnaValida(int columna) {
-    return tablero[0][columna] == " ";
+    return tablero[0][columna]==" ";
 }
 
 bool Nodo::esNodoTerminal() {
-    // Un nodo terminal es aquel en el que se ha alcanzado la profundidad máxima
-    return valor != 0 || verificarVictoria(1) || verificarVictoria(2);
+    return valor!=0 || verificarVictoria(1) || verificarVictoria(2);
 }
 
 int Nodo::minimax(int profundidad, bool esMaximizador, int alpha, int beta) {
-    if (profundidad == 0 || esNodoTerminal()) {
+    if (profundidad==0 || esNodoTerminal()) {
         return valor;
     }
 
     if (esMaximizador) {
-        int maxEval = INT_MIN;
-        for (int i = 0; i < columnas; ++i) {
+        int maxEval=INT_MIN;
+        for (int i=0;i<columnas;i++) {
             if (esColumnaValida(i)) {
-                Nodo* hijo = new Nodo(*this);
+                Nodo* hijo= new Nodo(*this);
                 hijo->realizarMovimiento(i, 2); // 2 representa al jugador máquina
-                int eval = hijo->minimax(profundidad - 1, false, alpha, beta);
-                maxEval = max(maxEval, eval);
-                alpha = max(alpha, eval);
-                if (beta <= alpha) {
+                int eval= hijo->minimax(profundidad - 1, false, alpha, beta);
+                maxEval= max(maxEval, eval);
+                alpha= max(alpha, eval);
+                if(beta<=alpha) {
                     delete hijo;
                     break;
                 }
@@ -104,14 +103,14 @@ int Nodo::minimax(int profundidad, bool esMaximizador, int alpha, int beta) {
         return maxEval;
     } else {
         int minEval = INT_MAX;
-        for (int i = 0; i < columnas; ++i) {
+        for (int i=0;i<columnas;i++) {
             if (esColumnaValida(i)) {
-                Nodo* hijo = new Nodo(*this);
+                Nodo* hijo= new Nodo(*this);
                 hijo->realizarMovimiento(i, 1); // 1 representa al jugador humano
-                int eval = hijo->minimax(profundidad - 1, true, alpha, beta);
-                minEval = min(minEval, eval);
-                beta = min(beta, eval);
-                if (beta <= alpha) {
+                int eval= hijo->minimax(profundidad - 1, true, alpha, beta);
+                minEval= min(minEval, eval);
+                beta= min(beta, eval);
+                if(beta<=alpha) {
                     delete hijo;
                     break;
                 }
@@ -123,55 +122,54 @@ int Nodo::minimax(int profundidad, bool esMaximizador, int alpha, int beta) {
 }
 
 bool Nodo::verificarVictoria(int jugador) {
-    string ficha = (jugador == 1) ? "X" : "O";
+    string ficha= (jugador== 1)?"X":"O";
 
     // DETECTAR VICTORIA EN FILAS
-    for (int i = 0; i < filas; ++i) {
-        for (int j = 0; j < columnas - 3; ++j) {
-            if (tablero[i][j] == ficha &&
-                tablero[i][j + 1] == ficha &&
-                tablero[i][j + 2] == ficha &&
-                tablero[i][j + 3] == ficha) {
+    for(int i=0;i<filas;i++) {
+        for(int j=0;j<columnas-3;j++) {
+            if (tablero[i][j]== ficha &&
+                tablero[i][j+1]== ficha &&
+                tablero[i][j+2]== ficha &&
+                tablero[i][j+3]== ficha) {
                 return true;
             }
         }
     }
 
     // DETECTAR VICTORIAS EN COLUMNAS
-    for (int i = 0; i < filas - 3; ++i) {
-        for (int j = 0; j < columnas; ++j) {
-            if (tablero[i][j] == ficha &&
-                tablero[i + 1][j] == ficha &&
-                tablero[i + 2][j] == ficha &&
-                tablero[i + 3][j] == ficha) {
+    for(int i=0;i<filas-3;i++) {
+        for(int j=0;j<columnas;j++) {
+            if (tablero[i][j]== ficha &&
+                tablero[i+1][j]== ficha &&
+                tablero[i+2][j]== ficha &&
+                tablero[i+3][j]== ficha) {
                 return true;
             }
         }
     }
 
     // DETECTAR VICTORIAS EN DIAGNOAL DERECHA
-    for (int i = 0; i < filas - 3; ++i) {
-        for (int j = 0; j < columnas - 3; ++j) {
-            if (tablero[i][j] == ficha &&
-                tablero[i + 1][j + 1] == ficha &&
-                tablero[i + 2][j + 2] == ficha &&
-                tablero[i + 3][j + 3] == ficha) {
+    for(int i=0;i<filas-3;i++) {
+        for(int j=0;j<columnas-3;j++) {
+            if (tablero[i][j]== ficha &&
+                tablero[i+1][j+1]== ficha &&
+                tablero[i+2][j+2]== ficha &&
+                tablero[i+3][j+3]== ficha) {
                 return true;
             }
         }
     }
 
     // DETECTAR VICTORIAS EN DIAGONAL IZQUIERDA
-    for (int i = 0; i < filas - 3; ++i) {
-        for (int j = 3; j < columnas; ++j) {
-            if (tablero[i][j] == ficha &&
-                tablero[i + 1][j - 1] == ficha &&
-                tablero[i + 2][j - 2] == ficha &&
-                tablero[i + 3][j - 3] == ficha) {
+    for(int i=0;i<filas-3;i++) {
+        for(int j=3;j<columnas;j++) {
+            if (tablero[i][j]== ficha &&
+                tablero[i+1][j-1]== ficha &&
+                tablero[i+2][j-2]== ficha &&
+                tablero[i+3][j-3]== ficha) {
                 return true;
             }
         }
     }
-
     return false;
 }
