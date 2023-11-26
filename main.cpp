@@ -5,41 +5,39 @@ using namespace std;
 
 
 
-//MINIMAX CON LA UTILIZACIÓN DE PODA ALFA-BETA
+//MINIMAX CON LA UTILIZACIÓN DE PODA ALFA-BETA - TUTORIAL RUSO
 int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta) {
-    if (profundidad == 0 || nodo->esNodoTerminal()) {
-        // Calcula y asigna la puntuación del nodo
+    if (profundidad==0 || nodo->esNodoTerminal()) {
         return nodo->valor;
     }
-
     if (esMaximizador) {
-        int maxEval = INT_MIN;
-        for (int i = 0; i < columnas; ++i) {
+        int maxEval= INT_MIN;
+        for (int i=0;i<columnas;i++) {
             if (nodo->esColumnaValida(i)) {
-                Nodo* hijo = new Nodo(*nodo);
-                hijo->realizarMovimiento(i, 2); // 2 representa al jugador máquina
-                int eval = minimax(hijo, profundidad - 1, false, alpha, beta);
-                maxEval = max(maxEval, eval);
-                alpha = max(alpha, eval);
+                Nodo* hijo= new Nodo(*nodo);
+                hijo->realizarMovimiento(i, 2);
+                int eval= minimax(hijo, profundidad - 1, false, alpha, beta);
+                maxEval= max(maxEval, eval);
+                alpha= max(alpha, eval);
                 delete hijo;
-                if (beta <= alpha) {
-                    break;  // Poda alfa-beta
+                if (beta<=alpha) {
+                    break;
                 }
             }
         }
         return maxEval;
     } else {
-        int minEval = INT_MAX;
-        for (int i = 0; i < columnas; ++i) {
+        int minEval= INT_MAX;
+        for (int i=0;i<columnas;i++) {
             if (nodo->esColumnaValida(i)) {
-                Nodo* hijo = new Nodo(*nodo);
-                hijo->realizarMovimiento(i, 1); // 1 representa al jugador humano
-                int eval = hijo->minimax(profundidad - 1, true, alpha, beta);
-                minEval = min(minEval, eval);
-                beta = min(beta, eval);
+                Nodo* hijo= new Nodo(*nodo);
+                hijo->realizarMovimiento(i, 1);
+                int eval= hijo->minimax(profundidad - 1, true, alpha, beta);
+                minEval= min(minEval, eval);
+                beta= min(beta, eval);
                 delete hijo;
-                if (beta <= alpha) {
-                    break;  // Poda alfa-beta
+                if (beta<=alpha) {
+                    break;
                 }
             }
         }
@@ -50,17 +48,13 @@ int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta
 
 //LA MAQUINA REALIZARÁ MOVIMIENTOS ALEATORIOS
 void realizarMovimientoFacil(Nodo* nodo) {
-    // Lógica para el nivel fácil
-    // Por ejemplo, selección aleatoria de una columna disponible
     int columnaAleatoria;
     do {
-        columnaAleatoria = rand() % columnas;
-    } while (nodo->tablero[0][columnaAleatoria] != " ");
-    
-    // Realizar el movimiento en la columna seleccionada
-    for (int i = 5; i >= 0; --i) {
-        if (nodo->tablero[i][columnaAleatoria] == " ") {
-            nodo->tablero[i][columnaAleatoria] = "O";
+        columnaAleatoria= rand()%columnas;
+    } while (nodo->tablero[0][columnaAleatoria]!=" ");
+    for (int i=5;i>=0;i--) {
+        if (nodo->tablero[i][columnaAleatoria]==" ") {
+            nodo->tablero[i][columnaAleatoria]="O";
             cout<<"Maquina:"<<"\n"<<
             "<-------------->"<<endl;
             nodo->mostrarTablero();
@@ -71,78 +65,54 @@ void realizarMovimientoFacil(Nodo* nodo) {
 
 //LA MAQUINA REALIZARÁ MOVIMIENTOS SEGUIDOS (O-O-O-O)
 void realizarMovimientoMedio(Nodo* nodo) {
-    int mejorColumna = -1;
-    int mejorPuntuacion = INT_MIN;
-
-    // Explorar todas las columnas posibles
-    for (int columna = 0; columna < columnas; columna++) {
-        // Si la columna está llena, ignórala
-        if (nodo->tablero[0][columna] != " ") {
+    int mejorColumna= -1;
+    int mejorPuntuacion= INT_MIN;
+    for (int columna=0;columna<columnas;columna++) {
+        if (nodo->tablero[0][columna]!= " ") {
             continue;
         }
-
-        // Crear un nodo hijo para la posible jugada
-        Nodo* hijo = new Nodo(*nodo);
-        hijo->realizarMovimiento(columna, 2); // 2 representa al jugador máquina
-
-        // Calcular la puntuación utilizando el algoritmo Minimax
-        int puntuacion = minimax(hijo, profundidadMaxima, false, INT_MIN, INT_MAX);
-
-        // Si la puntuación es mejor que la mejor puntuación actual, actualizar
-        if (puntuacion > mejorPuntuacion) {
-            mejorPuntuacion = puntuacion;
-            mejorColumna = columna;
+        Nodo* hijo= new Nodo(*nodo);
+        hijo->realizarMovimiento(columna, 2);
+        int puntuacion= minimax(hijo, profundidadMaxima, false, INT_MIN, INT_MAX);
+        if (puntuacion>mejorPuntuacion) {
+            mejorPuntuacion= puntuacion;
+            mejorColumna= columna;
         }
-
-        // Liberar memoria del nodo hijo
         delete hijo;
     }
-
-    // Realizar el movimiento en la mejor columna encontrada
     nodo->realizarMovimiento(mejorColumna, 2);
-    cout << "Maquina:" << "\n" << "<-------------->" << endl;
+    cout<<"Maquina:"<<"\n"<<"<-------------->"<<endl;
     nodo->mostrarTablero();
-    cout << "<-------------->" << endl;
+    cout<<"<-------------->"<<endl;
 }
-
-
-
-
 
 //LA MAQUINA SIEMPRE GANARA O EMPATE
 void realizarMovimientoDificil(Nodo* nodo) {
-    // Lógica para el nivel difícil
-    // Aquí puedes implementar una estrategia más avanzada
-    // que utilice el algoritmo Minimax para tomar la mejor decisión
-    // ...
 
-    // En este ejemplo, se utiliza la estrategia fácil
     realizarMovimientoFacil(nodo);
 }
 
-
 void movimientoMaquina(Nodo* nodo, int nivelDificultad) {
     switch (nivelDificultad) {
-        case 1:  // Fácil
+        case 1:
             realizarMovimientoFacil(nodo);
             break;
-        case 2:  // Medio
+        case 2:
             realizarMovimientoMedio(nodo);
             break;
-        case 3:  // Difícil
+        case 3:
             realizarMovimientoDificil(nodo);
             break;
         default:
-            cerr << "Nivel de dificultad no válido." << endl;
+            cerr<<"Nivel de dificultad no válido."<<endl;
     }
 }
-
 
 void movimientoJugador(Nodo*nodo,int jugador){
     int col;
     cout<<"Elegir columna para insertar ficha (1-7):";
     cin>>col;
-    while(col<1||col>7){
+    while(col<1 || col>7){
         cout<<"Ingrese columna valida (1-7): ";
         cin>>col;
     }
@@ -189,59 +159,56 @@ int OpcionesMenu(){
 int menu() {
     int opcion;
     do {
-        cout << "------CONECTA 4-----" << endl;
-        cout << "Escoja una dificultad:" << endl;
-        cout << "1) Facil" << endl;
-        cout << "2) Normal" << endl;
-        cout << "3) Dificil" << endl;
-        cout << "Opcion: ";
-        cin >> opcion;
-
+        cout<<"------CONECTA 4-----"<<endl;
+        cout<<"Escoja una dificultad:"<<endl;
+        cout<<"1) Facil"<<endl;
+        cout<<"2) Normal"<<endl;
+        cout<<"3) Dificil"<<endl;
+        cout<<"Opcion: ";
+        cin>>opcion;
         switch (opcion) {
             case 1:
-                cout << "Dificultad: Facil" << endl;
+                cout<<"Dificultad: Facil"<<endl;
                 break;
             case 2:
-                cout << "Dificultad: Medio" << endl;
+                cout<<"Dificultad: Medio"<<endl;
                 break;
             case 3:
-                cout << "Dificultad: Dificil" << endl;
+                cout<<"Dificultad: Dificil"<<endl;
                 break;
             default:
-                cout << "Ingrese una opcion valida" << endl;
+                cout<<"Ingrese una opcion valida"<<endl;
         }
-    } while (opcion < 1 || opcion > 3); //El bucle continuará mientras la opción sea inválida
+    } while (opcion<1 || opcion>3); //El bucle continuará mientras la opción sea inválida
     return opcion;
 }
 
 int main() {
-    int dificultad = menu();
-    Nodo* raiz = new Nodo();  // caso inicial (todo vacío)
+    int dificultad= menu();
+    Nodo* raiz= new Nodo();
     raiz->mostrarTablero();
-    bool mov = true;
-    int jugadorGanador = 0;
+    bool mov= true;
+    int jugadorGanador= 0;
     while (mov) {
-        // Realiza movimientos
-        movimientoJugador(raiz, 1);
+        movimientoJugador(raiz,1);
         if (raiz->verificarVictoria(1)) {
-            cout << "¡Jugador 1 ha ganado!" << endl;
-            jugadorGanador = 1;
+            cout<<"¡Jugador 1 ha ganado!"<<endl;
+            jugadorGanador= 1;
             break;
         } else {
-            movimientoMaquina(raiz, dificultad);
+            movimientoMaquina(raiz,dificultad);
             if (raiz->verificarVictoria(2)) {
-                cout << "¡La máquina ha ganado!" << endl;
-                jugadorGanador = 2;
+                cout<<"¡La máquina ha ganado!"<<endl;
+                jugadorGanador= 2;
                 break;
             } else {
-                if (OpcionesMenu() == 2) {
-                    mov = false;
+                if (OpcionesMenu()== 2) {
+                    mov= false;
                 }
             }
         }
     }
-    // Liberar la memoria
     delete raiz;
-    cout << "¡Partida finalizada!" << endl;
+    cout<<"¡Partida finalizada!"<<endl;
     return 0;
 }
