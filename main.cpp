@@ -88,9 +88,33 @@ void realizarMovimientoMedio(Nodo* nodo) {
 
 //LA MAQUINA SIEMPRE GANARA O EMPATE
 void realizarMovimientoDificil(Nodo* nodo) {
-
-    realizarMovimientoFacil(nodo);
+    int mejorColumna = -1;
+    int mejorPuntuacion = INT_MIN;
+    // Evaluar cada columna para determinar el mejor movimiento
+    for (int columna = 0; columna < columnas; columna++) {
+        if (nodo->tablero[0][columna] != " ") {
+            continue;  // La columna está llena
+        }
+        Nodo* hijo = new Nodo(*nodo);
+        hijo->realizarMovimiento(columna, 2);  // 2 representa al jugador máquina
+        int puntuacion = minimax(hijo, profundidadMaxima, false, INT_MIN, INT_MAX);
+        if (hijo->verificarVictoria(1)) {
+            puntuacion = INT_MAX;  // Bloquear al jugador es una prioridad
+        } else if (hijo->verificarVictoria(2)) {
+            puntuacion = INT_MIN;  // Evitar que el jugador humano gane
+        }
+        if (puntuacion > mejorPuntuacion) {
+            mejorPuntuacion = puntuacion;
+            mejorColumna = columna;
+        }
+        delete hijo;
+    }
+    nodo->realizarMovimiento(mejorColumna, 2);
+    cout << "Maquina:" << "\n" << "<-------------->" << endl;
+    nodo->mostrarTablero();
+    cout << "<-------------->" << endl;
 }
+
 
 void movimientoMaquina(Nodo* nodo, int nivelDificultad) {
     switch (nivelDificultad) {
