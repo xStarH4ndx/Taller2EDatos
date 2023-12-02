@@ -5,38 +5,38 @@ using namespace std;
 
 
 
-//MINIMAX CON LA UTILIZACIÓN DE PODA ALFA-BETA - TUTORIAL RUSO
 int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta) {
-    if (profundidad==0 || nodo->esNodoTerminal()) {
+    if (profundidad == 0 || nodo->esNodoTerminal()) {
         return nodo->valor;
     }
+
     if (esMaximizador) {
-        int maxEval= INT_MIN;
-        for (int i=0;i<columnas;i++) {
+        int maxEval = INT_MIN;
+        for (int i = 0; i < columnas; i++) {
             if (nodo->esColumnaValida(i)) {
-                Nodo* hijo= new Nodo(*nodo);
+                Nodo* hijo = new Nodo(*nodo);
                 hijo->realizarMovimiento(i, 2);
-                int eval= minimax(hijo, profundidad - 1, false, alpha, beta);
-                maxEval= max(maxEval, eval);
-                alpha= max(alpha, eval);
+                int eval = minimax(hijo, profundidad - 1, false, alpha, beta);
+                maxEval = max(maxEval, eval);
+                alpha = max(alpha, eval);
                 delete hijo;
-                if (beta<=alpha) {
+                if (beta <= alpha) {
                     break;
                 }
             }
         }
         return maxEval;
     } else {
-        int minEval= INT_MAX;
-        for (int i=0;i<columnas;i++) {
+        int minEval = INT_MAX;
+        for (int i = 0; i < columnas; i++) {
             if (nodo->esColumnaValida(i)) {
-                Nodo* hijo= new Nodo(*nodo);
+                Nodo* hijo = new Nodo(*nodo);
                 hijo->realizarMovimiento(i, 1);
-                int eval= hijo->minimax(profundidad - 1, true, alpha, beta);
-                minEval= min(minEval, eval);
-                beta= min(beta, eval);
+                int eval = minimax(hijo, profundidad - 1, true, alpha, beta);
+                minEval = min(minEval, eval);
+                beta = min(beta, eval);
                 delete hijo;
-                if (beta<=alpha) {
+                if (beta <= alpha) {
                     break;
                 }
             }
@@ -44,7 +44,6 @@ int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta
         return minEval;
     }
 }
-
 
 //LA MAQUINA REALIZARÁ MOVIMIENTOS ALEATORIOS
 void realizarMovimientoFacil(Nodo* nodo) {

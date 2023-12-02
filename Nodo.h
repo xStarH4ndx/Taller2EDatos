@@ -18,7 +18,6 @@ public:
     void mostrarTablero();
     bool esColumnaValida(int columna);
     bool esNodoTerminal();
-    int minimax(int profundidad, bool esMaximizador, int alpha, int beta);
 };
 
 Nodo::Nodo() {
@@ -79,47 +78,6 @@ bool Nodo::esNodoTerminal() {
     return valor!=0 || verificarVictoria(1) || verificarVictoria(2);
 }
 
-int Nodo::minimax(int profundidad, bool esMaximizador, int alpha, int beta) {
-    if (profundidad==0 || esNodoTerminal()) {
-        return valor;
-    }
-
-    if (esMaximizador) {
-        int maxEval=INT_MIN;
-        for (int i=0;i<columnas;i++) {
-            if (esColumnaValida(i)) {
-                Nodo* hijo= new Nodo(*this);
-                hijo->realizarMovimiento(i, 2); // 2 representa al jugador máquina
-                int eval= hijo->minimax(profundidad - 1, false, alpha, beta);
-                maxEval= max(maxEval, eval);
-                alpha= max(alpha, eval);
-                if(beta<=alpha) {
-                    delete hijo;
-                    break;
-                }
-                delete hijo;
-            }
-        }
-        return maxEval;
-    } else {
-        int minEval = INT_MAX;
-        for (int i=0;i<columnas;i++) {
-            if (esColumnaValida(i)) {
-                Nodo* hijo= new Nodo(*this);
-                hijo->realizarMovimiento(i, 1); // 1 representa al jugador humano
-                int eval= hijo->minimax(profundidad - 1, true, alpha, beta);
-                minEval= min(minEval, eval);
-                beta= min(beta, eval);
-                if(beta<=alpha) {
-                    delete hijo;
-                    break;
-                }
-                delete hijo;
-            }
-        }
-        return minEval;
-    }
-}
 
 bool Nodo::verificarVictoria(int jugador) {
     string ficha= (jugador== 1)?"X":"O";
