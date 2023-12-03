@@ -3,7 +3,7 @@ using namespace std;
 
 const int filas = 6;
 const int columnas = 7;
-const int profundidadMaxima = 4;
+const int profundidadMaxima = 7;
 
 class Nodo {
 public:
