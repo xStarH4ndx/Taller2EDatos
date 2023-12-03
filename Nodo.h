@@ -12,12 +12,14 @@ public:
     int valor;
     Nodo();
     ~Nodo();
-    bool verificarVictoria(int jugador);
-    void generarHijos(int jugador);
-    void realizarMovimiento(int columna, int jugador);
+    bool verificarVictoria(int);
+    void generarHijos(int);
+    void realizarMovimiento(int,int);
+    void realizar2mov(int,int,int);
     void mostrarTablero();
-    bool esColumnaValida(int columna);
+    bool esColumnaValida(int);
     bool esNodoTerminal();
+    bool esMovimientoValido(int,int);
 };
 
 Nodo::Nodo() {
@@ -70,9 +72,19 @@ void Nodo::realizarMovimiento(int columna, int jugador) {
     }
 }
 
+void Nodo::realizar2mov(int fila, int columna, int jugador) {
+    tablero[fila][columna] = (jugador == 1) ? "X" : "O";
+}
+
+
 bool Nodo::esColumnaValida(int columna) {
     return tablero[0][columna]==" ";
 }
+
+bool Nodo::esMovimientoValido(int fila, int columna) {
+    return fila >= 0 && fila < filas && columna >= 0 && columna < columnas && tablero[fila][columna] == " ";
+}
+
 
 bool Nodo::esNodoTerminal() {
     return valor!=0 || verificarVictoria(1) || verificarVictoria(2);

@@ -106,17 +106,62 @@ void realizarMovimientoDificil(Nodo* nodo) {
     int mejorColumna = -1;
     int mejorPuntuacion = INT_MIN;
     // Evaluar cada columna para determinar el mejor movimiento
-    for (int columna = 0; columna < columnas; columna++) {
-        if (nodo->tablero[0][columna] != " ") {
-            continue;  // La columna está llena
+    for(int columna=0;columna<columnas;columna++) {
+        if(nodo->tablero[0][columna]!=" ") {
+            continue;  //La columna está llena
         }
-        Nodo* hijo = new Nodo(*nodo);
+        Nodo* hijo= new Nodo(*nodo);
         hijo->realizarMovimiento(columna, 2);  // 2 representa al jugador máquina
-        int puntuacion = minimax(hijo, profundidadMaxima, false, INT_MIN, INT_MAX);
-        if (hijo->verificarVictoria(1)) {
-            puntuacion = INT_MAX;  // Bloquear al jugador es una prioridad
-        } else if (hijo->verificarVictoria(2)) {
-            puntuacion = INT_MIN;  // Evitar que el jugador humano gane
+        int puntuacion= minimax(hijo, profundidadMaxima, false, INT_MIN, INT_MAX);
+        if(hijo->verificarVictoria(1)) {
+            puntuacion= INT_MAX;  //Bloquear al jugador es una prioridad
+        } else if(hijo->verificarVictoria(2)) {
+            puntuacion= INT_MIN;
+        }
+        //Jugada horizontal
+        for(int i=0;i<filas;i++) {
+            int filaScore=0;
+            for(int j=0;j<columnas-3;j++) {
+                for(int k=0;k<4;k++) {
+                    if(hijo->tablero[i][j+k]=="O") {
+                        filaScore++;
+                    }
+                }
+                puntuacion+=filaScore;
+            }
+        }
+        //Jugada vertical
+        for(int j=0;j<columnas;j++) {
+            int columnaScore=0;
+            for(int i=0;i<filas-3;i++) {
+                for(int k=0;k<4;k++) {
+                    if(hijo->tablero[i+k][j]=="O") {
+                        columnaScore++;
+                    }
+                }
+                puntuacion+=columnaScore;
+            }
+        }
+        //Jugada diagonal
+        for(int i=0;i<=filas-4;i++) {
+            for(int j=0;j<=columnas-4;j++) {
+                int diagonalScore=0;
+                //Diagonal izquierda
+                for(int k=0;k<4;k++) {
+                    if(hijo->tablero[i+k][j+k]=="O") {
+                        diagonalScore++;
+                    }
+                }
+                puntuacion+=diagonalScore;
+                diagonalScore=0;
+                //Diagonal derecha
+                for(int k=0;k<4;k++) {
+                    if(hijo->tablero[i+k][j+3-k]=="O") {
+                        diagonalScore++;
+                    }
+                }
+                puntuacion+= diagonalScore;
+            }
         }
         if (puntuacion > mejorPuntuacion) {
             mejorPuntuacion = puntuacion;
@@ -129,6 +174,7 @@ void realizarMovimientoDificil(Nodo* nodo) {
     nodo->mostrarTablero();
     cout << "<-------------->" << endl;
 }
+
 
 void movimientoMaquina(Nodo* nodo, int nivelDificultad) {
     switch (nivelDificultad) {
