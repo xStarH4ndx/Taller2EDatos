@@ -41,3 +41,5 @@ Cada vez que sea el turno del jugador, este tendrá la opción de "guardar parti
 El programa tendrá 2 clases: Nodo y main
 
 La clase Nodo, se utilizará para diseñar el arbol de posibilidades, la lógica que se siguio para esto, fue ir creando hijos del nodo raiz, y eliminandolos de la memoria, de esta forma no se utilizan tantos recursos. Es decir, en primera instancia, el tablero está vacío, entonces el nodo raiz del arbol será este, y cuando sea el turno de la maquina, este utilizará el metodo miniMax, el cuál generará los hijos de este tablero
+
+
