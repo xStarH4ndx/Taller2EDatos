@@ -4,12 +4,11 @@
 using namespace std;
 
 int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta) {
-    if (profundidad == 0 || nodo->esNodoTerminal()) {
+    if (profundidad==0 || nodo->esNodoTerminal()) {
         return nodo->valor;
     }
-
     if (esMaximizador) {
-        int maxEval = INT_MIN;
+        int maxEval= INT_MIN;
         for (int i=0;i<columnas;i++) {
             if (nodo->esColumnaValida(i)) {
                 Nodo* hijo= new Nodo(*nodo);
@@ -62,44 +61,42 @@ void realizarMovimientoFacil(Nodo* nodo) {
 
 //LA MAQUINA REALIZARÁ MOVIMIENTOS SEGUIDOS (O-O-O-O)
 void realizarMovimientoMedio(Nodo* nodo) {
-    int mejorColumna = -1;
-    int mejorPuntuacion = INT_MIN;
+    int mejorColumna= -1;
+    int mejorPuntuacion= INT_MIN;
     // Evaluar cada columna para determinar el mejor movimiento
-    for (int columna = 0; columna < columnas; columna++) {
-        if (nodo->tablero[0][columna] != " ") {
+    for (int columna=0;columna<columnas;columna++) {
+        if (nodo->tablero[0][columna]!=" ") {
             continue;  // La columna está llena
         }
-        Nodo* hijo = new Nodo(*nodo);
-        hijo->realizarMovimiento(columna, 2);  // 2 representa al jugador máquina
-        //Calcular puntuación en función de la cantidad de fichas en la columna
+        Nodo* hijo=new Nodo(*nodo);
+        hijo->realizarMovimiento(columna, 2);
         int puntuacion = 0;
         //Jugada vertical
-        for (int i = 0; i < filas; i++) {
-            if (hijo->tablero[i][columna] == "O") {
+        for(int i=0;i<filas;i++) {
+            if (hijo->tablero[i][columna]=="O") {
                 puntuacion++;
             }
         }
         //Jugada horizontal
-        for (int j = 0; j < columnas; j++) {
-            if (hijo->tablero[filas - 1][j] == "O") {
+        for(int j=0;j<columnas;j++) {
+            if(hijo->tablero[filas-1][j]=="O") {
                 puntuacion++;
             }
         }
         //mayor puntuación
-        if (puntuacion > mejorPuntuacion) {
-            mejorPuntuacion = puntuacion;
-            mejorColumna = columna;
+        if(puntuacion>mejorPuntuacion) {
+            mejorPuntuacion=puntuacion;
+            mejorColumna=columna;
         }
         delete hijo;
     }
 
     // Realizar el movimiento en la mejor columna
     nodo->realizarMovimiento(mejorColumna, 2);
-    cout << "Maquina:" << "\n" << "<-------------->" << endl;
+    cout<<"Maquina:"<<"\n"<<"<-------------->"<<endl;
     nodo->mostrarTablero();
-    cout << "<-------------->" << endl;
+    cout<<"<-------------->"<<endl;
 }
-
 
 //LA MAQUINA SIEMPRE GANARA O EMPATE
 void realizarMovimientoDificil(Nodo* nodo) {
@@ -162,16 +159,16 @@ void realizarMovimientoDificil(Nodo* nodo) {
                 puntuacion+= diagonalScore;
             }
         }
-        if (puntuacion > mejorPuntuacion) {
-            mejorPuntuacion = puntuacion;
-            mejorColumna = columna;
+        if (puntuacion>mejorPuntuacion) {
+            mejorPuntuacion=puntuacion;
+            mejorColumna=columna;
         }
         delete hijo;
     }
     nodo->realizarMovimiento(mejorColumna, 2);
-    cout << "Maquina:" << "\n" << "<-------------->" << endl;
+    cout<<"Maquina:"<<"\n"<<"<-------------->"<< endl;
     nodo->mostrarTablero();
-    cout << "<-------------->" << endl;
+    cout<< "<-------------->"<<endl;
 }
 
 
