@@ -15,7 +15,6 @@ public:
     bool verificarVictoria(int);
     void generarHijos(int);
     void realizarMovimiento(int,int);
-    void realizar2mov(int,int,int);
     void mostrarTablero();
     bool esColumnaValida(int);
     bool esNodoTerminal();
@@ -71,11 +70,6 @@ void Nodo::realizarMovimiento(int columna, int jugador) {
         }
     }
 }
-
-void Nodo::realizar2mov(int fila, int columna, int jugador) {
-    tablero[fila][columna] = (jugador == 1) ? "X" : "O";
-}
-
 
 bool Nodo::esColumnaValida(int columna) {
     return tablero[0][columna]==" ";
