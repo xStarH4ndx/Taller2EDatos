@@ -3,8 +3,6 @@
 #include "Nodo.h"//acá estan las filas y columnas constantes
 using namespace std;
 
-
-
 int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta) {
     if (profundidad == 0 || nodo->esNodoTerminal()) {
         return nodo->valor;
@@ -131,7 +129,6 @@ void realizarMovimientoDificil(Nodo* nodo) {
     nodo->mostrarTablero();
     cout << "<-------------->" << endl;
 }
-
 
 void movimientoMaquina(Nodo* nodo, int nivelDificultad) {
     switch (nivelDificultad) {
