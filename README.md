@@ -1,7 +1,9 @@
 # Taller2EDatos
 --------------------------------------------
 Taller de estructura 2: Conect 4
-Nombre: Bruno Toro Elgueta - 20864066-6
+Nombre: Bruno Toro Elgueta
+Rut: 20864066-6
+Carrera: ICCI
 --------------------------------------------
 Linea de compilación:
 g++ -o main main.cpp
