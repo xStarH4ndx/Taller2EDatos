@@ -1,7 +1,28 @@
 #include <iostream>
 #include <climits>
+#include <fstream>
 #include "Nodo.h"//acá estan las filas y columnas constantes
 using namespace std;
+
+void guardarPartida(Nodo* nodo) {
+    ofstream archivo("partida_guardada.csv");
+    if (archivo.is_open()) {
+        for (int i = 0; i < filas; ++i) {
+            for (int j = 0; j < columnas; ++j) {
+                archivo << nodo->tablero[i][j];
+                if (j < columnas - 1) {
+                    archivo << ",";
+                }
+            }
+            archivo << endl;
+        }
+
+        archivo.close();
+        cout << "Partida guardada exitosamente en 'partida_guardada.csv'" << endl;
+    } else {
+        cerr << "Error al abrir el archivo para guardar la partida." << endl;
+    }
+}
 
 int minimax(Nodo* nodo, int profundidad, bool esMaximizador, int alpha, int beta) {
     if (profundidad==0 || nodo->esNodoTerminal()) {
@@ -214,25 +235,31 @@ void movimientoJugador(Nodo*nodo,int jugador){
     }
 }
 
-int OpcionesMenu(){
+int OpcionesMenu(Nodo* raiz) {
     int opcion;
-    do{
-        cout<<"---OPCIONES---"<<endl;
-        cout<<"1) Realizar Movimiento"<<
-        "\n"<<"2) Guardar Partida"<<endl;
-        cout<<"Opcion: ";
-        cin>>opcion;
-        switch(opcion){
+    do {
+        cout << "---OPCIONES---" << endl;
+        cout << "1) Realizar Movimiento" << endl
+             << "2) Guardar Partida" << endl
+             << "3) Salir" << endl;
+        cout << "Opcion: ";
+        cin >> opcion;
+        switch (opcion) {
             case 1:
-                opcion= 1;
+                opcion = 1;
                 break;
             case 2:
-                opcion= 2;
+                guardarPartida(raiz); // Llama a la función para guardar la partida
+                exit(0); // Cierra el programa después de guardar la partida
+                break;
+            case 3:
+                cout << "Saliendo del juego. ¡Hasta luego!" << endl;
+                exit(0); // Cierra el programa si el usuario selecciona salir
                 break;
             default:
-                cout<<"Ingrese opcion valida"<<endl;
+                cout << "Ingrese opcion valida" << endl;
         }
-    }while(opcion<1 || opcion>2);
+    } while (opcion < 1 || opcion > 3);
     return opcion;
 }
 
@@ -263,32 +290,57 @@ int menu() {
     return opcion;
 }
 
-int main() {
-    int dificultad= menu();
-    Nodo* raiz= new Nodo();
+void JuegoConect() {
+    int dificultad=menu();
+    Nodo *raiz=new Nodo();
     raiz->mostrarTablero();
-    bool mov= true;
-    int jugadorGanador= 0;
-    while (mov) {
-        movimientoJugador(raiz,1);
+    bool mov=true;
+    int jugadorGanador=0;
+    while(mov) {
+        movimientoJugador(raiz, 1);
         if (raiz->verificarVictoria(1)) {
             cout<<"¡Jugador 1 ha ganado!"<<endl;
-            jugadorGanador= 1;
+            jugadorGanador=1;
             break;
         } else {
-            movimientoMaquina(raiz,dificultad);
+            movimientoMaquina(raiz, dificultad);
             if (raiz->verificarVictoria(2)) {
                 cout<<"¡La máquina ha ganado!"<<endl;
-                jugadorGanador= 2;
+                jugadorGanador=2;
                 break;
             } else {
-                if (OpcionesMenu()== 2) {
-                    mov= false;
+                if (OpcionesMenu(raiz)==2) {
+                    mov=false;
                 }
             }
         }
     }
     delete raiz;
     cout<<"¡Partida finalizada!"<<endl;
+}
+
+int main() {
+    int opcionInicio;
+    do {
+        cout<<"------CONECTA 4-----"<<endl;
+        cout<<"1) Comenzar nueva partida"<<endl;
+        cout<<"2) Cargar partida"<<endl;
+        cout<<"3) Salir"<<endl;
+        cout<<"Opcion: ";
+        cin>>opcionInicio;
+        switch (opcionInicio) {
+            case 1:
+                JuegoConect();
+                break;
+            case 2:
+                cout<<"No supe cargar partida ;c"<<endl;
+                break;
+            case 3:
+                cout<<"Saliendo del juego. ¡Hasta luego!"<<endl;
+                break;
+            default:
+                cout<<"Ingrese una opción válida"<<endl;
+        }
+    } while (opcionInicio!=3);
     return 0;
 }
